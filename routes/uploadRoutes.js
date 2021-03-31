@@ -35,7 +35,7 @@ const upload = multer({
 
 
 router.post('/', upload.single('image'),protect,admin,(req,res)=> {
-	res.send(`http://localhost:5000/uploads/${req.file.filename}`)
+	res.send(`https://agile-lowlands-00002.herokuapp.com/uploads/${req.file.filename}`)
 })
 
 module.exports = router;
