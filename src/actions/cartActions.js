@@ -1,0 +1,58 @@
+import axios from "axios";
+import {
+  CART_ADD_ITEM,
+  CART_REMOVE_ITEM,
+  CART_SAVE_SHIPPING_ADDRESS,
+  SAVE_TOTAL_PRICE,
+} from "../constants/cartConstants";
+import {api} from '../api';
+
+export const addToCart = (id, qty) => async (dispatch, getState) => {
+  const { data } = await axios.get(`${api}/api/products/${id}`);
+
+  dispatch({
+    type: CART_ADD_ITEM,
+    payload: {
+      product: data._id,
+      name: data.name,
+      image: data.image,
+      price: data.price,
+      countInStock: data.countInStock,
+      qty: qty,
+    },
+  });
+
+  sessionStorage.setItem(
+    "cartItems",
+    JSON.stringify(getState().cart.cartItems)
+  );
+};
+
+export const removeFromCart = (id) => async (dispatch, getState) => {
+  dispatch({
+    type: CART_REMOVE_ITEM,
+    payload: id,
+  });
+
+  localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+export const saveShippingAddress = (data) => async (dispatch) => {
+  dispatch({
+    type: CART_SAVE_SHIPPING_ADDRESS,
+    payload: data,
+  });
+
+  localStorage.setItem("shippingAddress", JSON.stringify(data));
+};
+
+export const saveTotalPrice = (data) => async (dispatch, getState) => {
+  dispatch({
+    type: SAVE_TOTAL_PRICE,
+    payload: data,
+  });
+  localStorage.setItem(
+    "totalPrice",
+    JSON.stringify(getState().cart.totalPrice)
+  );
+};
